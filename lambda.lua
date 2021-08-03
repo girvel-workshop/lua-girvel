@@ -1,6 +1,6 @@
 require "strong"
-local exception = require "eros.libraries.girvel.exception"
-local tk = require "eros.libraries.girvel.toolkit"
+local exception = require "exception"
+local tk = require "tk"
 
 return function(text)
 	tk.push_environment(_ENV or getfenv())

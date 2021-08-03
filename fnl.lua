@@ -1,7 +1,7 @@
-local decorator = require "eros.libraries.girvel.decorator"
+local decorator = require "decorator"
 require "strong"
-local exception = require "eros.libraries.girvel.exception"
-local lambda = require[[eros.libraries.girvel.lambda]]
+local exception = require "exception"
+local lambda = require "lambda"
 
 local fnl = {}
 
@@ -13,8 +13,9 @@ end)
 fnl.docs = fnl.docs{
 	type='decorator',
 	description=[=[
-assigns some documentation to a value, 
-that later can be get by fnl.docs[<value>]]=]
+		assigns some documentation to a value, 
+		that later can be get by fnl.docs[<value>]
+	]=]
 } .. fnl.docs
 
 fnl.pipe = 

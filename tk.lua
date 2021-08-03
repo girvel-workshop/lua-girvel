@@ -1,4 +1,4 @@
-local decorator = require[[eros.libraries.girvel.decorator]]
+local decorator = require "decorator"
 
 local tk = {}
 

@@ -1,8 +1,8 @@
 package="girvel"
-version="1.0-1"
+version="1.0-2"
 source={
 	url="git://github.com/girvel-workshop/lua-girvel",
-	tag="1.0"
+	tag="1.0-2"
 }
 description={
 	summary="girvel's own lua framework for pipes, decorators etc",
