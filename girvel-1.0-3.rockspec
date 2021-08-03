@@ -17,14 +17,14 @@ build={
 	modules={
 		decorator="decorator.lua",
 		exception="exception.lua",
-		functional="functional.lua",
+		fnl="fnl.lua",
 		gamera="gamera.lua",
 		lambda="lambda.lua",
 		limited="limited.lua",
 		log="log.lua",
 		module="module.lua",
 		tesound="tesound.lua",
-		toolkit="toolkit.lua",
+		tk="tk.lua",
 		vector="vector.lua"
 	}
 }

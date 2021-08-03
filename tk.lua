@@ -2,6 +2,7 @@ local decorator = require "decorator"
 
 local tk = {}
 
+-- TODO full documentation
 tk.push_environment = function(env, delta)
   local i = 1
   while true do
