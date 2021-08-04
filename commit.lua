@@ -23,7 +23,7 @@ build = tonumber(build) + 1
 newstamp = version .. "-" .. build
 print(newstamp)
 
-rockspec_content = cat(old_rockspec)
+rockspec_content = tostring(cat(old_rockspec))
 print(
 	echo(
 		rockspec_content
