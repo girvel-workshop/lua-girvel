@@ -25,11 +25,10 @@ print(newstamp)
 
 rockspec_content = tostring(cat(old_rockspec))
 print(
-	echo(
-		rockspec_content
-			:gsub("version=%S*", 'version="%s"' % newstamp)
-			:gsub("tag=%S*", 'tag="%s"' % newstamp)
-	):tee(old_rockspec)
+	echo(inspect(rockspec_content
+		:gsub("version=%S*", 'version="%s"' % newstamp)
+		:gsub("tag=%S*", 'tag="%s"' % newstamp)
+	)):tee(old_rockspec)
 )
 
 print(mv(
