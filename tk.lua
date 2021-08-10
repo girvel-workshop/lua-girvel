@@ -1,17 +1,7 @@
 local decorator = require "decorator"
+local fnl = require "fnl"
 
 local tk = {}
-
--- TODO full documentation
-tk.push_environment = function(env, delta)
-  local i = 1
-  while true do
-    local name, value = debug.getlocal(3 + (delta or 0), i)
-    if not name then return end
-    env[name] = value
-    i = i + 1
-  end
-end
 
 tk.cache = decorator:new(function(self, f) 
   return function(argument)
@@ -28,6 +18,20 @@ tk.cache = decorator:new(function(self, f)
 end)
 
 tk.cache.global_cache = {}
+
+tk.set =
+	fnl.docs{
+		type='pipe function',
+		description='transforms the sequence to a set'
+	} ..
+	fnl.pipe() ..
+	function(t)
+		local result = {}
+		for _, v in ipairs(t) do
+			result[v] = true
+		end
+		return result
+	end
 
 local string = string or getmetatable('').__index
 function string:to_posix()

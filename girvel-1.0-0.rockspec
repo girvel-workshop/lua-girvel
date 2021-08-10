@@ -11,7 +11,18 @@ description={
 build={
 	type="builtin",
 	modules={
-		
+		container="container.lua",
+		decorator="decorator.lua",
+		exception="exception.lua",
+		fnl="fnl.lua",
+		gamera="gamera.lua",
+		lambda="lambda.lua",
+		limited="limited.lua",
+		log="log.lua",
+		module="module.lua",
+		tesound="tesound.lua",
+		tk="tk.lua",
+		vector="vector.lua"
 	}
 }
 			

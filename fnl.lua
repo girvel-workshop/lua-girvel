@@ -5,6 +5,7 @@ local lambda = require "lambda"
 
 local fnl = {}
 
+-- TODO move to another place
 fnl.docs = decorator:new(function(self, f, documentation)
 	self[f] = documentation
 	return f
@@ -59,6 +60,82 @@ fnl.filter =
 		end
 		return result
 	end
+	
+fnl.map = 
+	fnl.docs{} ..
+	fnl.pipe() ..
+	function(t, f)
+		local result = {}
+		for ix, it in ipairs(t) do
+			table.insert(result, f(it))
+		end
+		return result
+	end
+
+fnl.separate = 
+	fnl.docs{
+		type='pipe function'
+	} ..
+	fnl.pipe() ..
+	function(t, separator)
+		if #t == 0 then return {} end
+	
+		local result = {t[1]}
+		for i = 2, #t do
+			table.insert(result, separator)
+			table.insert(result, t[i])
+		end
+		return result
+	end
+
+fnl.join = 
+	fnl.docs{} ..
+	fnl.pipe() ..
+	function(t, metamethod)
+		metamethod = metamethod or "__add"
+		
+		if #t == 0 then return end
+
+		local result = t[1]
+		
+		for i = 2, #t do
+			result = getmetatable(result)[metamethod](result, t[i])
+		end
+		return result
+	end
+	
+-- TODO optimization: pipe + ipairs
+fnl.slice = 
+	fnl.docs{
+		type='pipe function',
+		returns='slice of the sequence'
+	} ..
+	fnl.pipe() ..
+	function(t, first, last, step)
+		if last and last < 0 then
+			last = #t + last + 1
+		end
+	
+		local result = {}
+		for i = first or 1, last or #t, step or 1 do
+			table.insert(result, t[i])
+		end
+		return result
+	end
+
+fnl.inspect = 
+	fnl.docs{} ..
+	fnl.pipe() ..
+	require "inspect"
+	
+-- TODO pipe functions as normal functions
+fnl.unpack =
+	fnl.docs{
+		type='pipe function',
+		description='pipe function for table.unpack / unpack'
+	} ..
+	fnl.pipe() ..
+	table.unpack or unpack
 
 fnl.values = 
 	fnl.docs{

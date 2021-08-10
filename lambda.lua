@@ -1,9 +1,19 @@
 require "strong"
 local exception = require "exception"
-local tk = require "tk"
+
+-- TODO full documentation
+local push_environment = function(env, delta)
+  local i = 1
+  while true do
+    local name, value = debug.getlocal(3 + (delta or 0), i)
+    if not name then return end
+    env[name] = value
+    i = i + 1
+  end
+end
 
 return function(text)
-	tk.push_environment(_ENV or getfenv())
+	push_environment(_ENV or getfenv())
 
   local a, b = text:find(" %-> ")
   local args = text:sub(0, a - 1)
