@@ -1,4 +1,4 @@
-local yaml = require "yaml"
+local yaml = require "lyaml"
 local fnl = require "fnl"
 
 local container = {}

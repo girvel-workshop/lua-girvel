@@ -1,6 +1,6 @@
-version: 1.0-0
-luarocks: true
-name: girvel
+version: 1.0-11
+git_origin: https://github.com/girvel-workshop/lua-girvel
 build_systems:
   luarocks: true
-git_origin: https://github.com/girvel-workshop/lua-girvel
+name: girvel
+luarocks: true
