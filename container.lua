@@ -33,6 +33,9 @@ container.file =
 				local file = io.open(self.path, "w")
 				file:write(content)
 				file:close()
+			end,
+			exists=function(self)
+				return io.open(self.path, "r") ~= nil
 			end
 		}
 	end
