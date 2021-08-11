@@ -65,6 +65,10 @@ fnl.map =
 	fnl.docs{} ..
 	fnl.pipe() ..
 	function(t, f)
+		if type(predicate) == "string" then
+			predicate = lambda("ix, it -> " .. predicate)
+		end
+	
 		local result = {}
 		for ix, it in ipairs(t) do
 			table.insert(result, f(it))
