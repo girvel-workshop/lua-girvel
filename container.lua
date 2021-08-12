@@ -1,5 +1,6 @@
 local yaml = require "lyaml"
 local fnl = require "fnl"
+local exception = require "exception"
 
 local container = {}
 

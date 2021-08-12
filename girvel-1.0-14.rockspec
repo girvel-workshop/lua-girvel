@@ -1,8 +1,8 @@
 package = "girvel"
-version="1.0-13"
+version="1.0-14"
 source = {
    url = "https://github.com/girvel-workshop/lua-girvel",
-   tag="1.0-13"
+   tag="1.0-14"
 }
 description = {
    summary = "none",
@@ -15,7 +15,6 @@ build = {
       decorator = "decorator.lua",
       exception = "exception.lua",
       fnl = "fnl.lua",
-      gamera = "gamera.lua",
       lambda = "lambda.lua",
       limited = "limited.lua",
       log = "log.lua",
