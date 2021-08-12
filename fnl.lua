@@ -65,8 +65,8 @@ fnl.map =
 	fnl.docs{} ..
 	fnl.pipe() ..
 	function(t, f)
-		if type(predicate) == "string" then
-			predicate = lambda("ix, it -> " .. predicate)
+		if type(f) == "string" then
+			f = lambda("ix, it -> " .. predicate)
 		end
 	
 		local result = {}
