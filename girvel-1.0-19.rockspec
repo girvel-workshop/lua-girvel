@@ -1,8 +1,8 @@
 package = "girvel"
-version="1.0-14"
+version="1.0-19"
 source = {
    url = "https://github.com/girvel-workshop/lua-girvel",
-   tag="1.0-14"
+   tag="1.0-19"
 }
 description = {
    summary = "none",

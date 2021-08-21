@@ -66,12 +66,12 @@ fnl.map =
 	fnl.pipe() ..
 	function(t, f)
 		if type(f) == "string" then
-			f = lambda("ix, it -> " .. predicate)
+			f = lambda("ix, it -> " .. f)
 		end
 	
 		local result = {}
 		for ix, it in ipairs(t) do
-			table.insert(result, f(it))
+			table.insert(result, f(ix, it))
 		end
 		return result
 	end
