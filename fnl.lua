@@ -1,6 +1,5 @@
 local decorator = require "decorator"
 require "strong"
-local exception = require "exception"
 local lambda = require "lambda"
 
 local fnl = {}

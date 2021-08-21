@@ -23,7 +23,7 @@ return function(text)
   local loading_function = load("return " .. function_text)
   
   if loading_function == nil then
-    exception.throw{author = "girvel.lambda", message = "Incorrect lambda `%s`" % function_text}
+    exception.throw{message = "Incorrect lambda `%s`" % function_text}
     -- TODO auto author
   end
   

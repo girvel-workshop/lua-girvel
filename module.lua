@@ -1,4 +1,5 @@
 local tk = require "tk"
+local exception = require "exception"
 
 local module = {}
 
@@ -15,7 +16,7 @@ function module:new(path)
   		return module:new(self.path .. "." .. item)
 		end,
 		__unm = function(self)
-			if love.filesystem.getInfo(self.path:to_posix(), 'directory') then
+			if self.path:to_posix(), 'directory') then
 		    return module.require_all(self.path)
 		  end
 		  return module.require(self.path)
