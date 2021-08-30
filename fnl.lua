@@ -36,21 +36,37 @@ fnl.pipe =
 		end
 	end)
 
+fnl.implicit_lambda = 
+	fnl.docs{
+		description=
+			'if the Nth argument is a string, parses it as an implicit' ..
+			' lambda w/ passed args',
+	} ..
+	decorator:new(function(_, f, argument_index, args_definition)
+		return function(...)
+			local args = {...}
+			if type(args[argument_index]) == "string" then
+				args[argument_index] = lambda(
+					args_definition .. " -> " .. args[argument_index]
+				)
+			end
+
+			return f(args / fnl.unpack())
+		end
+	end)
+
 fnl.filter = 
 	fnl.docs{
 		type='pipe function',
 		description='filters table by ipairs',
 		args={
 			'input sequence',
-			'predicate function(ix, it) or implicit (ix, it) lambda'
+			'predicate function(ix, it)'
 		}
 	} ..
 	fnl.pipe() .. 
+	fnl.implicit_lambda(2, "ix, it") ..
 	function(t, predicate)
-		if type(predicate) == "string" then
-			predicate = lambda("ix, it -> " .. predicate)
-		end
-
 		local result = {}
 		for i, v in ipairs(t) do
 			if predicate(i, v) then
@@ -63,16 +79,28 @@ fnl.filter =
 fnl.map = 
 	fnl.docs{} ..
 	fnl.pipe() ..
+	fnl.implicit_lambda(2, "ix, it") ..
 	function(t, f)
-		if type(f) == "string" then
-			f = lambda("ix, it -> " .. f)
-		end
-	
 		local result = {}
 		for ix, it in ipairs(t) do
 			table.insert(result, f(ix, it))
 		end
 		return result
+	end
+
+fnl.all = 
+	fnl.docs{
+		description=
+			'checks by ipairs() whether all values in sequence are truthy',
+	} ..
+	fnl.pipe() ..
+	function(t)
+		for ix, it in ipairs(t) do
+			if not it then
+				return false
+			end
+		end
+		return true
 	end
 
 fnl.separate = 
