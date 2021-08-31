@@ -16,6 +16,7 @@ build = {
       environment="environment.lua",
       exception = "exception.lua",
       fnl = "fnl.lua",
+      gamera="gamera.lua",
       lambda = "lambda.lua",
       limited = "limited.lua",
       log = "log.lua",
