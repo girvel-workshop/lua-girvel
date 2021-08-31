@@ -1,5 +1,7 @@
 local decorator = {}
 
+local unpack = unpack or table.unpack
+
 function decorator:new(f)
 	result = setmetatable({_function = f}, self)
 	self.__index = self
