@@ -13,6 +13,7 @@ build = {
    modules = {
       container = "container.lua",
       decorator = "decorator.lua",
+      environment="environment.lua",
       exception = "exception.lua",
       fnl = "fnl.lua",
       lambda = "lambda.lua",
