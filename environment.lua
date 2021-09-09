@@ -1,6 +1,6 @@
 local environment = {}
 
--- TODO full documentation
+--- Pushes upper local variables into the current scope
 environment.push = function(env, delta)
   local i = 1
   while true do
