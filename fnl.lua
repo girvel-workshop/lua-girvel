@@ -159,4 +159,30 @@ fnl.contains = syntax.pipe() .. function(collection, element)
   return #(collection / fnl.filter(function(ix, it) return it == element end)) > 0
 end
 
+--- Caches results for the given argument
+fnl.cache = syntax.decorator() .. function(self, f)
+  return function(argument)
+    if not self.global_cache[f] then
+      self.global_cache[f] = {}
+    end
+
+    if not self.global_cache[f][argument] then
+      self.global_cache[f][argument] = f(argument)
+    end
+
+    return self.global_cache[f][argument]
+  end
+end
+
+fnl.cache.global_cache = {}
+
+--- Transforms the sequence to a set
+fnl.set = syntax.pipe() .. function(t)
+  local result = {}
+  for _, v in ipairs(t) do
+    result[v] = true
+  end
+  return result
+end
+
 return fnl

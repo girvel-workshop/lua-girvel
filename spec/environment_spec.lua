@@ -3,13 +3,14 @@ describe("environment library", function()
 
   describe("push function", function()
     it("should push upper environment", function()
-      local it_works = true
+      local it_works = false
 
       local f = function()
         environment.push(_ENV or getfenv())
         it_works = a == 1
       end
       local a = 1
+      f()
 
       assert.is_true(it_works)
     end)

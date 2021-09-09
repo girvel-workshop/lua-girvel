@@ -1,8 +1,9 @@
+--- Library for quick importing libraries and assets
+local module = {}
+
 local tk = require "tk"
 local exception = require "exception"
 require "strong"
-
-local module = {}
 
 local function is_directory(path)
   return io.open(path) and not io.open(path, "a")
