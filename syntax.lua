@@ -1,10 +1,9 @@
 --- Library containing all the syntax changing functions
+local syntax = {}
 
 local environment = require "environment"
 unpack = unpack or table.unpack
 require "strong"
-
-local syntax = {}
 
 local decorator = function(f)
   return setmetatable({function_=f},{

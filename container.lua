@@ -3,7 +3,6 @@ local fnl = require "fnl"
 
 local container = {}
 
----
 container.file =
   fnl.docs{
     type='function',

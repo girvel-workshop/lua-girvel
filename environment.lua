@@ -1,3 +1,4 @@
+--- Library containing functions to work with lua environments
 local environment = {}
 
 --- Pushes upper local variables into the current scope
@@ -13,6 +14,7 @@ end
 
 -- TODO nested use
 -- TODO lua_compatibility environment?
+--- Makes names from the given table available inside the given function
 environment.use = function(env, f)
   local old_metatable = getmetatable(_G)
   setmetatable(_G, {__index=env, __newindex=env})
