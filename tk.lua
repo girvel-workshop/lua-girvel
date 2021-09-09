@@ -21,4 +21,23 @@ function tk.tree()
   })
 end
 
+--- Gets a custom tree path
+function tk.get(tree_, head, ...)
+  if head == nil then
+    return tree_
+  end
+
+  return tk.get(tree_[head], ...)
+end
+
+--- Sets a value of the tree by a variadic path
+function tk.set(tree_, value, head, ...)
+  if #{...} == 0 then
+    tree_[head] = value
+    return
+  end
+
+  return tk.set(tree_[head], value,...)
+end
+
 return tk
