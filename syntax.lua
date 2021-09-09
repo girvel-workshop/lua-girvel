@@ -8,10 +8,10 @@ local syntax = {}
 
 local decorator = function(f)
   return setmetatable({function_=f},{
-    __call = function(called_decorator, ...)
-      return setmetatable({function_=called_decorator.function_, args = {...}}, {
-        __concat = function(concatenated_decorator, value)
-          return self:function_(value, unpack(self.args))
+    __call = function(called, ...)
+      return setmetatable({function_= called.function_, args = {...}}, {
+        __concat = function(concatenated, value)
+          return concatenated:function_(value, unpack(concatenated.args))
         end
       })
     end
@@ -68,7 +68,7 @@ function(_, f, argument_index, args_definition)
       )
     end
 
-    return f(args / fnl.unpack())
+    return f(unpack(args))
   end
 end
 

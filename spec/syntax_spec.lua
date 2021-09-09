@@ -31,4 +31,11 @@ describe("syntax module", function()
       assert.is_true(it_works)
     end)
   end)
+
+  describe("syntax.implicit_lambda decorator", function()
+    it("should make on of the arguments an implicit lambda", function()
+      local apply = syntax.implicit_lambda(1, "x") .. function(f, x) return f(x) end
+      assert.are.equal(64, apply("x^2", 8))
+    end)
+  end)
 end)
