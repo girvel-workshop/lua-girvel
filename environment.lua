@@ -13,10 +13,10 @@ end
 
 -- TODO nested use
 environment.use = function(env, f)
-	local old_metatable = getmetatable(_G)
-	setmetatable(_G, {__index=env, __newindex=env})
-	f()
-	setmetatable(_G, old_metatable)
+  local old_metatable = getmetatable(_G)
+  setmetatable(_G, {__index=env, __newindex=env})
+  f()
+  setmetatable(_G, old_metatable)
 end
 
 return environment
