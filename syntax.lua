@@ -1,5 +1,8 @@
 --- Library containing all the syntax changing functions
 
+local environment = require "environment"
+require "strong"
+
 local syntax = {}
 
 --- Creates a decorator from the given function
@@ -27,5 +30,24 @@ syntax.pipe = syntax.decorator(function(_, f)
     })
   end
 end)
+
+--- Dynamically creates a function from lambda-string <args> -> <result>
+-- @param source lambda source code
+syntax.lambda = function(source)
+  environment.push(_ENV or getfenv())
+
+  local a, b = source:find(" %-> ")
+  local args = source:sub(0, a - 1)
+  local result = source:sub(b + 1)
+
+  local function_text = "function(%s) return %s end" % {args, result}
+  local loading_function, err = (loadstring or load)("return " .. function_text)
+
+  if loading_function == nil then
+    error(err)
+  end
+
+  return loading_function()
+end
 
 return syntax
