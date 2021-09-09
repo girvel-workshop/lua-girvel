@@ -5,10 +5,10 @@ describe("syntax module", function()
     it("should create decorators", function()
       local it_works = false
 
-      local decorator = syntax.decorator(function()
+      local decorator = syntax.decorator() .. function()
         it_works = true
         return "Tadam!"
-      end)
+      end
 
       local result = decorator() .. 0
 

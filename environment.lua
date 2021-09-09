@@ -12,6 +12,7 @@ environment.push = function(env, delta)
 end
 
 -- TODO nested use
+-- TODO lua_compatibility environment?
 environment.use = function(env, f)
   local old_metatable = getmetatable(_G)
   setmetatable(_G, {__index=env, __newindex=env})

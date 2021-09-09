@@ -1,29 +1,6 @@
-local decorator = require "decorator"
 require "strong"
-local lambda = require "lambda"
 
 local fnl = {}
-
-
-
-fnl.implicit_lambda = 
-  fnl.docs{
-    description=
-      'if the Nth argument is a string, parses it as an implicit' ..
-      ' lambda w/ passed args',
-  } ..
-  decorator:new(function(_, f, argument_index, args_definition)
-    return function(...)
-      local args = {...}
-      if type(args[argument_index]) == "string" then
-        args[argument_index] = lambda(
-          args_definition .. " -> " .. args[argument_index]
-        )
-      end
-
-      return f(args / fnl.unpack())
-    end
-  end)
 
 fnl.filter = 
   fnl.docs{
@@ -64,7 +41,7 @@ fnl.all =
   } ..
   fnl.pipe() ..
   function(t)
-    for ix, it in ipairs(t) do
+    for _, it in ipairs(t) do
       if not it then
         return false
       end
@@ -148,7 +125,7 @@ fnl.values =
   fnl.pipe() ..
   function(t)
     result = {}
-    for k, v in pairs(t) do
+    for _, v in pairs(t) do
       table.insert(result, v)
     end
     return result

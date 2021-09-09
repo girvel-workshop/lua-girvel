@@ -1,26 +1,31 @@
 --- Library containing all the syntax changing functions
 
 local environment = require "environment"
+unpack = unpack or table.unpack
 require "strong"
 
 local syntax = {}
 
---- Creates a decorator from the given function
--- @param f base function(decorator, decorated, decoration_args...)
-syntax.decorator = function(f)
+local decorator = function(f)
   return setmetatable({function_=f},{
-    __call = function(self, ...)
-      return setmetatable({function_=self.function_, args = {...}}, {
-        __concat = function(self, other)
-          return self:function_(other, unpack(self.args))
+    __call = function(called_decorator, ...)
+      return setmetatable({function_=called_decorator.function_, args = {...}}, {
+        __concat = function(concatenated_decorator, value)
+          return self:function_(value, unpack(self.args))
         end
       })
     end
   })
 end
 
+--- Creates a decorator from the given function
+-- @param f base function(decorator, decorated, decoration_args...)
+syntax.decorator = decorator(function(_, f)
+  return decorator(f)
+end)
+
 --- Decorator making the function f(x, ...) a piped one with syntax x / f(...)
-syntax.pipe = syntax.decorator(function(_, f)
+syntax.pipe = syntax.decorator() .. function(_, f)
   return function(...)
     return setmetatable({args={...}}, {
       __div = function(table, self)
@@ -29,7 +34,7 @@ syntax.pipe = syntax.decorator(function(_, f)
       end
     })
   end
-end)
+end
 
 --- Dynamically creates a function from lambda-string <args> -> <result>
 -- @param source lambda source code
@@ -48,6 +53,23 @@ syntax.lambda = function(source)
   end
 
   return loading_function()
+end
+
+--- Decorator, making Nth argument an implicit lambda
+-- If the Nth argument to the decorated function is a string, it is automatically
+-- parsed to be an implicit lambda with given arguments
+syntax.implicit_lambda = syntax.decorator() ..
+function(_, f, argument_index, args_definition)
+  return function(...)
+    local args = {...}
+    if type(args[argument_index]) == "string" then
+      args[argument_index] = syntax.lambda(
+        args_definition .. " -> " .. args[argument_index]
+      )
+    end
+
+    return f(args / fnl.unpack())
+  end
 end
 
 return syntax
