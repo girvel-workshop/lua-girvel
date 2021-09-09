@@ -22,4 +22,10 @@ environment.use = function(env, f)
   setmetatable(_G, old_metatable)
 end
 
+--- Removes compatibility issues
+environment.fix = function()
+  table.unpack = unpack or table.unpack
+  unpack = table.unpack
+end
+
 return environment

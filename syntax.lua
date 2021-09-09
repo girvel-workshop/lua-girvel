@@ -2,7 +2,7 @@
 local syntax = {}
 
 local environment = require "environment"
-unpack = unpack or table.unpack
+environment.fix()
 require "strong"
 
 local decorator = function(f)
@@ -25,14 +25,13 @@ end)
 
 --- Decorator making the function f(x, ...) a piped one with syntax x / f(...)
 syntax.pipe = syntax.decorator() .. function(_, f)
-  return function(...)
-    return setmetatable({args={...}}, {
-      __div = function(table, self)
-        result = f(table, (unpack or table.unpack)(self.args))
-        return result
+  return setmetatable({base_function=f}, {__call = function(called, ...)
+    return setmetatable({base_function=called.base_function, args={...}}, {
+      __div = function(x, divided)
+        return f(x, table.unpack(divided.args))
       end
     })
-  end
+  end})
 end
 
 --- Dynamically creates a function from lambda-string <args> -> <result>
