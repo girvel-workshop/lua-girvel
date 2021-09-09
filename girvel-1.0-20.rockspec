@@ -1,11 +1,10 @@
 package = "girvel"
-version="1.0-20"
+version = "1.0-20"
 source = {
    url = "https://github.com/girvel-workshop/lua-girvel",
-   tag="1.0-20"
 }
 description = {
-   summary = "none",
+   summary = "girvel's functional framework",
    license = "MIT"
 }
 build = {

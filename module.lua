@@ -1,7 +1,9 @@
 --- Library for quick importing libraries and assets
 local module = {}
+local module_mt = {}
+setmetatable(module, module_mt)
 
-local tk = require "tk"
+local fnl = require "fnl"
 local exception = require "exception"
 require "strong"
 
@@ -20,7 +22,8 @@ module.default_represent = {
   extension = "lua"
 }
 
-function module:new(path)
+--- Creates wrapper for importing modules with the given root path
+function module_mt:__call(path)
   return setmetatable({path = path}, {
     __index = function(self, item)
       return module:new(self.path .. "." .. item)
@@ -70,7 +73,8 @@ module.require_all = tk.cache() .. function(luapath)
   return result
 end
 
-module.require = tk.cache() .. function(luapath)
+-- TODO make cache for N arguments
+module.require = fnl.cache() .. function(luapath)
   local represent = module.get_represent_for_path(luapath)
   return represent.repr(luapath:to_posix() .. "." .. represent.extension)
 end
