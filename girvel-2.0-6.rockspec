@@ -1,11 +1,15 @@
 package = "girvel"
-version = "1.0-20"
+version = "2.0-6"
 source = {
-   url = "https://github.com/girvel-workshop/lua-girvel",
+   url = "git://github.com/girvel-workshop/lua-girvel"
 }
 description = {
-   summary = "girvel's functional framework",
+   summary = "girvel's own functional-style lua framework",
+   homepage = "http://girvel.xyz",
    license = "MIT"
+}
+dependencies = {
+   "lua >= 5.1, < 5.4"
 }
 build = {
    type = "builtin",
@@ -14,7 +18,6 @@ build = {
       fnl = "fnl.lua",
       limited = "limited.lua",
       module = "module.lua",
-      syntax = "syntax.lua",
       tk = "tk.lua",
       vector = "vector.lua"
    }
