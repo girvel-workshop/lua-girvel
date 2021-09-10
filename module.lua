@@ -4,18 +4,17 @@ local module_mt = {}
 setmetatable(module, module_mt)
 
 -- TODO dependencies
--- TODO migration to lfs
 local lfs = require "lfs"
 local fnl = require "fnl"
 require "strong"
 require "tk"
 
 local function is_directory(path)
-  return io.open(path) and not io.open(path, "a")
+  return io.open(path) and lfs.attributes(path).mode == "directory"
 end
 
 local function is_file(path)
-  return io.open(path) and io.open(path, "a")
+  return io.open(path) and lfs.attributes(path).mode == "file"
 end
 
 module.default_represent = {
@@ -73,7 +72,6 @@ module.require_all = fnl.cache() .. function(luapath)
   return result
 end
 
--- TODO make cache for N arguments
 module.require = fnl.cache() .. function(luapath)
   local represent = module.get_represent_for_path(luapath)
   return represent.repr(luapath:to_posix() .. "." .. represent.extension)

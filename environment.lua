@@ -13,7 +13,6 @@ environment.push = function(env, delta)
 end
 
 -- TODO nested use
--- TODO lua_compatibility environment?
 --- Makes names from the given table available inside the given function
 environment.use = function(env, f)
   local old_metatable = getmetatable(_G)
