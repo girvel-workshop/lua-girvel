@@ -5,12 +5,12 @@ local environment = require "environment"
 environment.fix()
 require "strong"
 
-local decorator = function(f)
-  return setmetatable({function_=f},{
-    __call = function(called, ...)
-      return setmetatable({function_= called.function_, args = {...}}, {
-        __concat = function(concatenated, value)
-          return concatenated:function_(value, unpack(concatenated.args))
+local decorator_factory = function(f)
+  return setmetatable({function_=f},{  -- decorator
+    __call = function(decorator, ...)
+      return setmetatable({decorator=decorator, args={...}}, {  -- called decorator
+        __concat = function(called_decorator, value)
+          return called_decorator.decorator:function_(value, unpack(called_decorator.args))
         end
       })
     end
@@ -19,8 +19,8 @@ end
 
 --- Creates a decorator from the given function
 -- @param f base function(decorator, decorated, decoration_args...)
-syntax.decorator = decorator(function(_, f)
-  return decorator(f)
+syntax.decorator = decorator_factory(function(_, f)
+  return decorator_factory(f)
 end)
 
 --- Decorator making the function f(x, ...) a piped one with syntax x / f(...)
@@ -28,7 +28,7 @@ syntax.pipe = syntax.decorator() .. function(_, f)
   return setmetatable({base_function=f}, {__call = function(called, ...)
     return setmetatable({base_function=called.base_function, args={...}}, {
       __div = function(x, divided)
-        return f(x, table.unpack(divided.args))
+        return divided.base_function(x, table.unpack(divided.args))
       end
     })
   end})

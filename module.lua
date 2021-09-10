@@ -3,9 +3,12 @@ local module = {}
 local module_mt = {}
 setmetatable(module, module_mt)
 
+-- TODO dependencies
+-- TODO migration to lfs
+local lfs = require "lfs"
 local fnl = require "fnl"
-local exception = require "exception"
 require "strong"
+require "tk"
 
 local function is_directory(path)
   return io.open(path) and not io.open(path, "a")
@@ -26,16 +29,13 @@ module.default_represent = {
 function module_mt:__call(path)
   return setmetatable({path = path}, {
     __index = function(self, item)
-      return module:new(self.path .. "." .. item)
+      return module(self.path .. "." .. item)
     end,
     __unm = function(self)
       local represent = module.get_represent_for_path(self.path)
       if not io.open(self.path:to_posix() .. "." .. represent.extension)
         and not io.open(self.path:to_posix()) then
-        error(exception{
-          message="Module %s does not exist" % self.path,
-          type="module_does_not_exist"
-        })
+        error("Module %s does not exist" % self.path)
       end
 
       if is_file(self.path:to_posix() .. "." .. represent.extension) then
@@ -50,18 +50,19 @@ function module_mt:__call(path)
   })
 end
 
-module.require_all = tk.cache() .. function(luapath)
+-- TODO fix cache
+module.require_all = fnl.cache() .. function(luapath)
   if not io.open(luapath:to_posix()) then return end
   
   local result = {}
 
   local represent = module.get_represent_for_path(luapath)
   
-  for _, file in ipairs(love.filesystem.getDirectoryItems(luapath:to_posix())) do
-    if not file:startsWith("_") then
+  for file in lfs.dir(luapath:to_posix()) do
+    if not file:startsWith("_") and file ~= "." and file ~= ".." then
       local value
       if file:endsWith("." .. represent.extension) then
-        file = file:gsub("%.[%w%d]*", "")
+        file = file:sub(1, #file - #represent.extension - 1)
         value = module.require(luapath .. "." .. file)
       elseif is_directory(luapath:to_posix() .. "/" .. file, 'file') then
         value = module.require_all(luapath .. "." .. file)
