@@ -2,6 +2,7 @@
 local fnl = {}
 
 local syntax = require "syntax"
+local tk = require "tk"
 
 --- Filters the table by ipairs & predicate
 fnl.filter = syntax.pipe() .. syntax.implicit_lambda(2, "ix, it") ..
@@ -161,16 +162,9 @@ end
 
 --- Caches results for the given argument
 fnl.cache = syntax.decorator() .. function(self, f)
-  return function(argument)
-    if not self.global_cache[f] then
-      self.global_cache[f] = {}
-    end
-
-    if not self.global_cache[f][argument] then
-      self.global_cache[f][argument] = f(argument)
-    end
-
-    return self.global_cache[f][argument]
+  return function(...)
+    return tk.get(self.global_cache, f, ...)
+        or tk.set(self.global_cache, f(...), f, ...)
   end
 end
 

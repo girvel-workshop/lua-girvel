@@ -17,4 +17,19 @@ describe("functional module", function()
       assert.are.same(seq, {fnl.unpack.base_function(seq)})
     end)
   end)
+
+  describe("cache decorator", function()
+    it("should cache results", function()
+      local call_counter = 0
+      local f = fnl.cache() .. function(a, b, c)
+        call_counter = call_counter + 1
+        return a + b + c
+      end
+
+      f(1, 2, 3)
+      f(1, 2, 3)
+
+      assert.are.equal(1, call_counter)
+    end)
+  end)
 end)

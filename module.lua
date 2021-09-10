@@ -50,7 +50,6 @@ function module_mt:__call(path)
   })
 end
 
--- TODO fix cache
 module.require_all = fnl.cache() .. function(luapath)
   if not io.open(luapath:to_posix()) then return end
   

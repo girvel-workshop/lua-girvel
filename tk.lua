@@ -1,8 +1,6 @@
 --- Toolkit module, containing all the unclassified functionality
 local tk = {}
 
-local fnl = require "fnl"
-
 local string = string or getmetatable('').__index
 
 --- Converts lua path to posix format
@@ -23,6 +21,10 @@ end
 
 --- Gets a custom tree path
 function tk.get(tree_, head, ...)
+  if tree_ == nil then
+    return
+  end
+
   if head == nil then
     return tree_
   end
@@ -34,7 +36,11 @@ end
 function tk.set(tree_, value, head, ...)
   if #{...} == 0 then
     tree_[head] = value
-    return
+    return value
+  end
+
+  if not tree_[head] and #{...} > 0 then
+    tree_[head] = {}
   end
 
   return tk.set(tree_[head], value,...)

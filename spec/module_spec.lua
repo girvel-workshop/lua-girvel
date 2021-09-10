@@ -15,7 +15,6 @@ describe("module library", function()
 
     it("should use _representation.lua files", function()
       local custom_directory = -assets.folder_with_custom_importing_mechanism
-      print(require[[inspect]](custom_directory))
       assert.are_equal("This is a file", custom_directory.file)
       assert.are_equal(nil, custom_directory.does_not_load)
     end)
