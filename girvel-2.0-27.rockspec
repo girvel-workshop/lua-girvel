@@ -1,5 +1,5 @@
 package = "girvel"
-version = "2.0-25"
+version = "2.0-27"
 source = {
    url = "git://github.com/girvel-workshop/lua-girvel"
 }
@@ -16,9 +16,9 @@ build = {
    modules = {
       env = "env.lua",
       fnl = "fnl.lua",
-      limited = "limited.lua",
       module = "module.lua",
-      tk = "tk.lua",
-      vector = "vector.lua"
+      ["structures.limited"] = "structures/limited.lua",
+      ["structures.vector"] = "structures/vector.lua",
+      tk = "tk.lua"
    }
 }
