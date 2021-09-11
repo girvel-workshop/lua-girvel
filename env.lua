@@ -24,14 +24,14 @@ local function get_last_index(x)
 end
 
 --- Makes names from the given table available inside the given function
-env.append = function(env_, f)
+env.append = function(env_, f, ...)
   local last_index = get_last_index(_G)
 
   local result
   local mt = getmetatable(last_index)
   if mt == nil then
     setmetatable(last_index, {__index= env_, __newindex= env_})
-    result = f()
+    result = f(...)
     setmetatable(last_index, nil)
   else
     old_index = mt.__index
@@ -40,7 +40,7 @@ env.append = function(env_, f)
     mt.__index = env_
     mt.__newindex = env_
 
-    result = f()
+    result = f(...)
 
     mt.__index = old_index
     mt.__newindex = old_newindex
@@ -53,6 +53,15 @@ end
 env.fix = function()
   table.unpack = unpack or table.unpack
   unpack = table.unpack
+end
+
+--- Isolates environment to the given one
+env.use = function(env_, f, ...)
+  local old_env = _G
+  _G = env_
+  local result = f(...)
+  _G = old_env
+  return result
 end
 
 return env
