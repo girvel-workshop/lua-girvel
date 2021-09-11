@@ -6,22 +6,22 @@ setmetatable(limited, module_mt)
 local limited_mt = {__index = {}}
 
 --- Creates limited value
-module_mt.__call = function(value, min, max) 
+module_mt.__call = function(_, value, min, max)
   return setmetatable({
     value=value,
-    min= min,
-    to= max
+    min=min,
+    max=max
   }, limited_mt)
 end
 
 --- Creates limited value set to minimal (default is 0)
-limited.minimized = function(to, value, min) 
-  return limited(value or min or 0, min or 0, to)
+limited.minimized = function(max, min)
+  return limited(min or 0, min or 0, max)
 end
 
 --- Creates limited value set to maximal
-limited.maximized = function(to, value, min) 
-  return limited(value or to, min or 0, to)
+limited.maximized = function(max, min)
+  return limited(max, min or 0, max)
 end
 
 --- Try to move value and return success
@@ -34,8 +34,8 @@ limited_mt.__index.move = function(self, delta)
 
     return false
   else
-    if self.value < self.limit then
-      self.value = math.min(self.to, self.value + delta)
+    if self.value < self.max then
+      self.value = math.min(self.max, self.value + delta)
       return true
     end
 
