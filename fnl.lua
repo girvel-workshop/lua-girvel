@@ -29,6 +29,49 @@ function(t, f)
   return result
 end
 
+local binary_operators_to_functions = {
+  ["+"] =   {function(a, b) return a + b end},
+  ["-"] =   {function(a, b) return a - b end},
+  ["*"] =   {function(a, b) return a * b end,   function(x) return x == 0 end},
+  ["/"] =   {function(a, b) return a / b end},
+  ["^"] =   {function(a, b) return a ^ b end,   function(x) return x == 1 end},
+  [".."] =  {function(a, b) return a .. b end},
+  ["and"] = {function(a, b) return a and b end, function(x) return not x end},
+  ["or"] =  {function(a, b) return a or b end,  function(x) return x end},
+  ["=="] =  {function(a, b) return a == b end},
+  ["~="] =  {function(a, b) return a ~= b end}
+}
+
+--- Folds the table by given predicate or metamethod
+-- @param f folding function
+-- @param break_predicate condition of breaking return
+fnl.fold = syntax.pipe() .. function(t, f, break_predicate)
+  if #t == 0 then return end
+  local result = t[1]
+
+  if f == nil then
+    f = function(a, b) return a .. b end
+  elseif type(f) == "string" then
+    if f:sub(1, 2) == "__" then
+      f = getmetatable(result)[f]
+    else
+      f, break_predicate = table.unpack(binary_operators_to_functions[f])
+    end
+  end
+
+  break_predicate = break_predicate or fnl.static(false)
+
+  for i = 2, #t do
+    if break_predicate(result) then
+      return result
+    end
+    result = f(result, t[i])
+  end
+  return result
+end
+
+local to_boolean = function(_, x) return not not x end
+
 --- Checks by ipairs whether all values in sequence are truthy
 -- If f is given pre-maps table by f
 fnl.all = syntax.pipe() ..
@@ -37,12 +80,18 @@ function(t, predicate)
     t = t / fnl.map(predicate)
   end
 
-  for _, it in ipairs(t) do
-    if not it then
-      return false
-    end
+  return t / fnl.map(to_boolean) / fnl.fold "and"
+end
+
+--- Checks by ipairs whether any value in sequence is truthy
+-- If f is given pre-maps table by f
+fnl.any = syntax.pipe() ..
+function(t, predicate)
+  if predicate ~= nil then
+    t = t / fnl.map(predicate)
   end
-  return true
+
+  return t / fnl.map(to_boolean) / fnl.fold "or"
 end
 
 --- Separates the table by ipairs & given separator
@@ -54,36 +103,6 @@ function(t, separator)
   for i = 2, #t do
     table.insert(result, separator)
     table.insert(result, t[i])
-  end
-  return result
-end
-
-local binary_operators_to_functions = {
-  ["+"] = function(a, b) return a + b end,
-  ["-"] = function(a, b) return a - b end,
-  ["*"] = function(a, b) return a * b end,
-  ["/"] = function(a, b) return a / b end,
-  ["^"] = function(a, b) return a ^ b end,
-  [".."] = function(a, b) return a .. b end,
-}
-
---- Folds the table by given predicate or metamethod
-fnl.fold = syntax.pipe() .. function(t, f)
-  if #t == 0 then return end
-  local result = t[1]
-
-  if f == nil then
-    f = function(a, b) return a .. b end
-  elseif type(f) == "string" then
-    if f:sub(1, 2) == "__" then
-      f = getmetatable(result)[f]
-    else
-      f = binary_operators_to_functions[f]
-    end
-  end
-
-  for i = 2, #t do
-    result = f(result, t[i])
   end
   return result
 end
@@ -105,7 +124,7 @@ end
 --- Returns pretty string representation of the value
 fnl.inspect = syntax.pipe() .. require "inspect"
 
---- Piped unpack, does not work in 5.1
+--- Piped unpack, does not work as piped in 5.1
 fnl.unpack = syntax.pipe() .. table.unpack
 
 --- Copies & extends one table by another
@@ -202,6 +221,9 @@ fnl.cache = syntax.decorator() .. function(self, f)
 end
 
 fnl.cache.global_cache = {}
+
+--- Generates clojure f() = x
+fnl.static = function(x) return function() return x end end
 
 
 return fnl

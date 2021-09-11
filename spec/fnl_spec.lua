@@ -20,8 +20,9 @@ describe("functional module", function()
 
   describe("all function", function()
     it("checks whether all the elements of the sequence are truthy", function()
-      assert.is_true({true, "123", "a", {}} / fnl.all())
-      assert.is_false({false, true, 123} / fnl.all())
+      assert.is_true({true, true, true} / fnl.all(), "pure booleans")
+      assert.is_true({true, "123", "a", {}} / fnl.all(), "non-booleans")
+      assert.is_false({false, true, 123} / fnl.all(), "non-booleans")
     end)
 
     it("can pre-map sequence", function()
@@ -30,6 +31,23 @@ describe("functional module", function()
       )
       assert.is_false(
         {"12", "123"} / fnl.all(function(ix, it) return #it > 2 end)
+      )
+    end)
+  end)
+
+  describe("any function", function()
+    it("checks whether any element of the sequence is truthy", function()
+      assert.is_false({false, false, false} / fnl.any(), "pure booleans")
+      assert.is_true({false, false, {}} / fnl.any(), "non-booleans")
+      assert.is_false({false, false} / fnl.any(), "non-booleans")
+    end)
+
+    it("can pre-map sequence", function()
+      assert.is_false(
+        {"123", "2312", "4133412"} / fnl.any(function(ix, it) return #it <= 2 end)
+      )
+      assert.is_true(
+        {"12", "123"} / fnl.any(function(ix, it) return #it <= 2 end)
       )
     end)
   end)
@@ -210,6 +228,17 @@ describe("functional module", function()
       f(1, 2, 3)
 
       assert.are.equal(1, call_counter)
+    end)
+  end)
+
+  describe("static generator", function()
+    it("generates clojure f() = ...", function()
+      local f = fnl.static(2)
+
+      assert.are.equal(2, f(3))
+      assert.are.equal(2, f(2))
+      assert.are.equal(2, f(1, 2, 3))
+      assert.are.equal(2, f "shit")
     end)
   end)
 end)
