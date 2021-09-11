@@ -6,7 +6,7 @@ describe("environment library", function()
       local it_works = false
 
       local f = function()
-        environment.push(_ENV or getfenv())
+        environment.push()
         it_works = a == 1
       end
       local a = 1

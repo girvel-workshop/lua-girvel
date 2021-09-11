@@ -37,7 +37,7 @@ end
 --- Dynamically creates a function from lambda-string <args> -> <result>
 -- @param source lambda source code
 syntax.lambda = function(source)
-  environment.push(_ENV or getfenv())
+  environment.push()
 
   local a, b = source:find(" %-> ")
   local args = source:sub(0, a - 1)

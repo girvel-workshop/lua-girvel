@@ -1,13 +1,14 @@
 --- Library containing functions to work with lua environments
-local environment = {}
+local env = {}
 
 --- Pushes upper local variables into the current scope
-environment.push = function(env, delta)
+env.push = function(delta)
+  local env_ = getfenv(2)
   local i = 1
   while true do
     local name, value = debug.getlocal(3 + (delta or 0), i)
     if not name then return end
-    env[name] = value
+    env_[name] = value
     i = i + 1
   end
 end
@@ -23,21 +24,21 @@ local function get_last_index(x)
 end
 
 --- Makes names from the given table available inside the given function
-environment.append = function(env, f)
+env.append = function(env_, f)
   local last_index = get_last_index(_G)
 
   local result
   local mt = getmetatable(last_index)
   if mt == nil then
-    setmetatable(last_index, {__index=env, __newindex=env})
+    setmetatable(last_index, {__index= env_, __newindex= env_})
     result = f()
     setmetatable(last_index, nil)
   else
     old_index = mt.__index
     old_newindex = mt.__newindex
 
-    mt.__index = env
-    mt.__newindex = env
+    mt.__index = env_
+    mt.__newindex = env_
 
     result = f()
 
@@ -49,9 +50,9 @@ environment.append = function(env, f)
 end
 
 --- Removes compatibility issues
-environment.fix = function()
+env.fix = function()
   table.unpack = unpack or table.unpack
   unpack = table.unpack
 end
 
-return environment
+return env
