@@ -4,6 +4,9 @@ local fnl = {}
 local syntax = require "syntax"
 local tk = require "tk"
 
+
+-- [[ STANDARD PIPED FUNCTIONS ]]
+
 --- Filters the table by ipairs & predicate
 fnl.filter = syntax.pipe() .. syntax.implicit_lambda(2, "ix, it") ..
 function(t, predicate)
@@ -92,38 +95,6 @@ fnl.inspect = syntax.pipe() .. require "inspect"
 --- Piped unpack, does not work in 5.1
 fnl.unpack = syntax.pipe() .. table.unpack
 
---- Gets all the values by pairs & puts them into the sequence
-fnl.values = syntax.pipe() .. function(t)
-  result = {}
-  for _, v in pairs(t) do
-    table.insert(result, v)
-  end
-  return result
-end
-
---- Mutates the given table by removing the first occurrence of value
-fnl.remove_mut = function(t, value)
-  for i, v in ipairs(t) do
-    if v == value then
-      table.remove(t, i)
-      return self
-    end
-  end
-end
-
---- Mutates the given table by extending it by other tables
-fnl.extend_mut = function(self, head, ...)
-  if head == nil then
-    return self
-  end
-
-  for k, v in pairs(head) do
-    self[k] = v
-  end
-
-  return fnl.extend_mut(self, ...)
-end
-
 --- Copies & extends one table by another
 fnl.extend = syntax.pipe() .. function(self, ...)
   return fnl.extend_mut(self / fnl.copy(), ...)
@@ -162,6 +133,53 @@ fnl.contains = syntax.pipe() .. function(collection, element)
   return #(collection / fnl.filter(function(ix, it) return it == element end)) > 0
 end
 
+-- [[ CONVERSION PIPED FUNCTIONS ]]
+
+--- Gets all the values by pairs & puts them into the sequence
+fnl.values = syntax.pipe() .. function(t)
+  result = {}
+  for _, v in pairs(t) do
+    table.insert(result, v)
+  end
+  return result
+end
+
+--- Transforms the sequence to a set
+fnl.set = syntax.pipe() .. function(t)
+  local result = {}
+  for _, v in pairs(t) do
+    result[v] = true
+  end
+  return result
+end
+
+-- [[ MUTATING FUNCTIONS ]]
+
+--- Mutates the given table by removing the first occurrence of value
+fnl.remove_mut = function(t, value)
+  for i, v in ipairs(t) do
+    if v == value then
+      table.remove(t, i)
+      return self
+    end
+  end
+end
+
+--- Mutates the given table by extending it by other tables
+fnl.extend_mut = function(self, head, ...)
+  if head == nil then
+    return self
+  end
+
+  for k, v in pairs(head) do
+    self[k] = v
+  end
+
+  return fnl.extend_mut(self, ...)
+end
+
+-- [[ FUNCTIONAL TOOLS ]]
+
 --- Caches results for the given argument
 fnl.cache = syntax.decorator() .. function(self, f)
   return function(...)
@@ -172,13 +190,5 @@ end
 
 fnl.cache.global_cache = {}
 
---- Transforms the sequence to a set
-fnl.set = syntax.pipe() .. function(t)
-  local result = {}
-  for _, v in pairs(t) do
-    result[v] = true
-  end
-  return result
-end
 
 return fnl
