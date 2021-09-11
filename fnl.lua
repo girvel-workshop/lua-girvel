@@ -101,23 +101,32 @@ fnl.values = syntax.pipe() .. function(t)
   return result
 end
 
---- Mutates the given table by removing the value
-fnl.remove = function(t, value)
+--- Mutates the given table by removing the first occurrence of value
+fnl.remove_mut = function(t, value)
   for i, v in ipairs(t) do
     if v == value then
       table.remove(t, i)
-      return value
+      return self
     end
   end
 end
 
---- Copies & extends one table by another
-fnl.extend = syntax.pipe() .. function(table1, table2)
-  result = table1 / fnl.copy()
-  for k, v in pairs(table2) do
-    result[k] = v
+--- Mutates the given table by extending it by other tables
+fnl.extend_mut = function(self, head, ...)
+  if head == nil then
+    return self
   end
-  return result
+
+  for k, v in pairs(head) do
+    self[k] = v
+  end
+
+  return fnl.extend_mut(self, ...)
+end
+
+--- Copies & extends one table by another
+fnl.extend = syntax.pipe() .. function(self, ...)
+  return fnl.extend_mut(self / fnl.copy(), ...)
 end
 
 --- Creates a copy of the given table
@@ -126,7 +135,7 @@ fnl.copy = syntax.pipe() .. function(t, cache, not_deep)
   if t == nil then return nil end
 
   if type(t) ~= "table" then return t end
-  if not cache then cache = {} end
+  cache = cache or {}
   if cache[t] then return cache[t] end
 
   if t.copy ~= nil then
@@ -148,14 +157,7 @@ fnl.copy = syntax.pipe() .. function(t, cache, not_deep)
   return result
 end
 
---- Is it useful?
-fnl.inherit = syntax.pipe() .. function(child, parent)
-  setmetatable(child, parent)
-  parent.__index = parent
-  return child
-end
-
---- Checks by ipairs whether the table contains the given value
+--- Checks by ipairs whether the table contains given value
 fnl.contains = syntax.pipe() .. function(collection, element)
   return #(collection / fnl.filter(function(ix, it) return it == element end)) > 0
 end
@@ -173,7 +175,7 @@ fnl.cache.global_cache = {}
 --- Transforms the sequence to a set
 fnl.set = syntax.pipe() .. function(t)
   local result = {}
-  for _, v in ipairs(t) do
+  for _, v in pairs(t) do
     result[v] = true
   end
   return result

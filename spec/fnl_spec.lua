@@ -70,12 +70,124 @@ describe("functional module", function()
     end)
   end)
 
+  describe("slice function", function()
+    it("slices the table by ipairs and first, last, step", function()
+        assert.are.same(
+          {2, 4, 6},
+          {1, 2, 3, 4, 5, 6, 7, 8, 9} / fnl.slice(2, 6, 2)
+        )
+    end)
+  end)
+
+  describe("inspect function", function()
+    it("inspects a table", function()
+        assert.are.equal(require[[inspect]]{1, 2, 3}, {1, 2, 3} / fnl.inspect())
+    end)
+  end)
+
   describe("unpack function", function()
     it("should unpack a sequence", function()
       local seq = {1, 2, 3}
 
       --assert.are.same(seq, {seq / fnl.unpack()})
       assert.are.same(seq, {fnl.unpack.base_function(seq)})
+    end)
+  end)
+
+  describe("values function", function()
+    it("returns values of the table by pairs()", function()
+      assert.are.same(
+        {1, 2, 3} / fnl.set(),
+        {a=1, b=2, c=3} / fnl.values() / fnl.set()
+      )
+    end)
+  end)
+
+  describe("remove function", function()
+    it("mutates given table by removing the value", function()
+      t = {1, 2, 3}
+      fnl.remove_mut(t, 2)
+      assert.are.same({1, 3}, t)
+    end)
+  end)
+
+  describe("extend function", function()
+    it("extends one table by anothers", function()
+      assert.are.same(
+        {a=1, b=2, c=3, d=4},
+        {a=1} / fnl.extend({b=2, d=4}, {c=3})
+      )
+    end)
+  end)
+
+  describe("copy function", function()
+    it("should copy", function()
+      local test_table = {
+        a = 1,
+        b = 2
+      }
+
+      local copy = test_table / fnl.copy()
+
+      assert.are.same(test_table, copy)
+      assert.are.not_equal(test_table, copy)
+    end)
+
+    it("should be deep", function()
+      local test_table = {
+        a = 1,
+        b = 2,
+        c = {a = 1}
+      }
+
+      local copy = test_table / fnl.copy()
+
+      assert.are.same(test_table, copy)
+      assert.are.not_equal(test_table.c, copy.c)
+    end)
+
+    it("should use :copy function if it exists", function()
+      local test_table = {
+        a = 1,
+        b = 2,
+        copy = function(self)
+          return {}
+        end
+      }
+
+      assert.are.same({}, test_table / fnl.copy())
+    end)
+
+    it("should save internal references", function()
+      local reference = {
+        a = 1, b = 2, c = 3
+      }
+
+      local original = {
+        reference1 = reference,
+        reference2 = reference,
+        reference_container = {
+          reference = reference
+        }
+      }
+
+      local copy = original / fnl.copy()
+
+      assert.are.equal(copy.reference1, copy.reference2)
+      assert.are.equal(copy.reference1, copy.reference_container.reference)
+    end)
+  end)
+
+  describe("contains function", function()
+    it("checks by ipairs whether the table contains given value", function()
+      assert.is_true({1, 2, 3} / fnl.contains(2))
+      assert.is_false({4, 5, "6"} / fnl.contains "5")
+    end)
+  end)
+
+  describe("set function", function()
+    it("transforms sequence to a set", function()
+      assert.are.same({a=true, [1]=true}, {"a", 1} / fnl.set())
     end)
   end)
 
