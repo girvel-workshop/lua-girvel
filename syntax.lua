@@ -1,7 +1,7 @@
 --- Library containing all the syntax changing functions
 local syntax = {}
 
-local environment = require "environment"
+local environment = require "env"
 environment.fix()
 require "strong"
 

@@ -1,5 +1,5 @@
 describe("environment library", function()
-  local environment = require "environment"
+  local environment = require "env"
 
   describe("push function", function()
     it("pushes upper environment", function()
@@ -31,7 +31,7 @@ describe("environment library", function()
     it("can be nested", function()
       local it_works = environment.append({a=1}, function()
         return environment.append({result=true}, function()
-          return result
+          return a == 1 and result
         end)
       end)
 
