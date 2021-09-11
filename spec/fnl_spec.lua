@@ -65,6 +65,13 @@ describe("functional module", function()
       )
     end)
 
+    it("folds the sequence by a given operator", function()
+      assert.are.equal(
+        63,
+        {1, 2, 4, 8, 16, 32} / fnl.fold "+"
+      )
+    end)
+
     it("concatenates strings", function()
       assert.are_equal("1234", {"1", "2", "3", "4"} / fnl.fold())
     end)

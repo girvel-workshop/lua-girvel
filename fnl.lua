@@ -58,6 +58,15 @@ function(t, separator)
   return result
 end
 
+local binary_operators_to_functions = {
+  ["+"] = function(a, b) return a + b end,
+  ["-"] = function(a, b) return a - b end,
+  ["*"] = function(a, b) return a * b end,
+  ["/"] = function(a, b) return a / b end,
+  ["^"] = function(a, b) return a ^ b end,
+  [".."] = function(a, b) return a .. b end,
+}
+
 --- Folds the table by given predicate or metamethod
 fnl.fold = syntax.pipe() .. function(t, f)
   if #t == 0 then return end
@@ -66,7 +75,11 @@ fnl.fold = syntax.pipe() .. function(t, f)
   if f == nil then
     f = function(a, b) return a .. b end
   elseif type(f) == "string" then
-    f = getmetatable(result)[f]
+    if f:sub(1, 2) == "__" then
+      f = getmetatable(result)[f]
+    else
+      f = binary_operators_to_functions[f]
+    end
   end
 
   for i = 2, #t do
