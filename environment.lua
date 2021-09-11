@@ -12,13 +12,40 @@ environment.push = function(env, delta)
   end
 end
 
--- TODO nested use
+local function get_last_index(x)
+  local mt = getmetatable(x)
+
+  if mt == nil or mt.__index == nil then
+    return x
+  end
+
+  return get_last_index(mt.__index)
+end
+
 --- Makes names from the given table available inside the given function
-environment.use = function(env, f)
-  local old_metatable = getmetatable(_G)
-  setmetatable(_G, {__index=env, __newindex=env})
-  f()
-  setmetatable(_G, old_metatable)
+environment.append = function(env, f)
+  local last_index = get_last_index(_G)
+
+  local result
+  local mt = getmetatable(last_index)
+  if mt == nil then
+    setmetatable(last_index, {__index=env, __newindex=env})
+    result = f()
+    setmetatable(last_index, nil)
+  else
+    old_index = mt.__index
+    old_newindex = mt.__newindex
+
+    mt.__index = env
+    mt.__newindex = env
+
+    result = f()
+
+    mt.__index = old_index
+    mt.__newindex = old_newindex
+  end
+
+  return result
 end
 
 --- Removes compatibility issues
