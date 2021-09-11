@@ -3,7 +3,7 @@ local limited = {}
 local module_mt = {}
 setmetatable(limited, module_mt)
 
-local limited_mt = {__index = {}}
+local limited_mt = {__index={}}
 
 --- Creates limited value
 module_mt.__call = function(_, value, min, max)

@@ -1,5 +1,42 @@
+--- Library structure to work with N-dimensional vectors
 local vector = {}
+local module_mt = {}
+setmetatable(vector, module_mt)
 
+local vector_methods = {}
+local vector_mt = {
+  --- Allows to get v[1], v[2], ... as v.x, v.y, ...
+  __index=function(self, index)
+    return rawget(self, self.dimensions[index]) or vector_methods[index]
+  end
+}
+
+local fnl = require 'fnl'
+
+
+--- Creates vector w/ varargs
+module_mt.__call = function(self, ...)
+  return setmetatable({
+    dimensions={
+      x=1,
+      y=2,
+      z=3,
+      w=4
+    },
+    ...
+  }, vector_mt)
+end
+
+--- Calculates vector's squared magnitude
+vector_methods.squared_magnitude = function(self)
+  return self / fnl.map(function(ix, it) return it^2 end) / fnl.fold "+"
+end
+
+return vector
+
+-- [[ OBSOLETE CODE ]]
+
+--[[
 function vector:new(x, y)
   local v={x=x, y=y}
   setmetatable(v, self)
@@ -63,3 +100,5 @@ function vector.one()
 end
 
 return vector
+
+]]
