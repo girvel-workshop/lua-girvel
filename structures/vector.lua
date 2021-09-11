@@ -27,9 +27,23 @@ module_mt.__call = function(self, ...)
   }, vector_mt)
 end
 
---- Calculates vector's squared magnitude
+--- Calculates vector's squared magnitude (for optimization purposes)
 vector_methods.squared_magnitude = function(self)
   return self / fnl.map(function(ix, it) return it^2 end) / fnl.fold "+"
+end
+
+--- Calculates vector's magnitude
+vector_methods.magnitude = function(self)
+  return self:squared_magnitude() ^ 0.5
+end
+
+--- Rotates 2D vector
+vector_methods.rotated = function(self, angle)
+  assert(#self == 2, "Vector should be two-dimensional")
+  return vector(
+    math.cos(angle) * self.x - math.sin(angle) * self.y,
+    math.sin(angle) * self.x + math.cos(angle) * self.y
+  )
 end
 
 return vector
@@ -37,27 +51,6 @@ return vector
 -- [[ OBSOLETE CODE ]]
 
 --[[
-function vector:new(x, y)
-  local v={x=x, y=y}
-  setmetatable(v, self)
-  self.__index = self
-  return v
-end
-
-function vector:magnitude()
-  return (self.x ^ 2 + self.y ^ 2) ^ .5
-end
-
-function vector:rotated(angle)
-  return vector:new(
-    math.cos(angle) * self.x - math.sin(angle) * self.y,
-    math.sin(angle) * self.x + math.cos(angle) * self.y
-  )
-end
-
-function vector:unpack()
-  return self.x, self.y
-end
 
 function vector.__unm(v)
   return v * -1
