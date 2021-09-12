@@ -122,7 +122,8 @@ fnl.slice = syntax.pipe() .. function(t, first, last, step)
 end
 
 --- Returns pretty string representation of the value
-fnl.inspect = syntax.pipe() .. require "inspect"
+--fnl.inspect = syntax.pipe() .. require "inspect"
+fnl.inspect = syntax.pipe() .. function(x) print(x); return require[[inspect]](x) end
 
 --- Piped unpack, does not work as piped in 5.1
 fnl.unpack = syntax.pipe() .. table.unpack

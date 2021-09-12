@@ -27,8 +27,11 @@ module_mt.__call = function(self, ...)
   }, vector_mt)
 end
 
+-- [[ VECTOR METHODS ]]
+
 --- Calculates vector's squared magnitude (for optimization purposes)
 vector_methods.squared_magnitude = function(self)
+  print(self / fnl.inspect())
   return self / fnl.map(function(ix, it) return it^2 end) / fnl.fold "+"
 end
 
@@ -44,6 +47,36 @@ vector_methods.rotated = function(self, angle)
     math.cos(angle) * self.x - math.sin(angle) * self.y,
     math.sin(angle) * self.x + math.cos(angle) * self.y
   )
+end
+
+-- [[ VECTOR OPERATORS ]]
+
+--- Inverts vector
+vector_mt.__unm = function(self) return self * -1 end
+
+--- Adds one vector to another
+vector_mt.__add = function(self, other) 
+  assert(#self == #other, "vectors should be the same size")
+  return vector(table.unpack(
+    self / fnl.map(function(ix, it) return it + other[ix] end)
+  ))
+end
+
+--- Subtracts one vector from another
+vector_mt.__sub = function(self, other)
+  return self + -other
+end
+
+--- Multiplies the vector by the number
+vector_mt.__mul = function(self, number)
+  return vector(table.unpack(
+    self / fnl.map(function(ix, it) return it * number end)
+  ))
+end
+
+--- Divides the vector by the number
+vector_mt.__div = function(self, number)
+  return self * (1 / number)
 end
 
 return vector
