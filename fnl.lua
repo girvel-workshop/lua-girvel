@@ -5,17 +5,45 @@ local syntax = require "syntax"
 local tk = require "tk"
 
 
----- [[ BASE CLASS ]]
---
---local create_pipe = function()
---
---end
---
----- [[ ITERATORS ]]
---
---fnl.ipairs = function(pipe)
---  return create_pipe()
---end
+-- [[ BASE CLASS ]]
+
+--- Pipe's methods
+local pipe_methods = {}
+
+--- Pipe's metatable
+local pipe_mt = {__index=pipe_methods}
+
+--- Creates a pipe
+local create_pipe = function(iterator, t)
+  return setmetatable({
+    iterator=iterator,
+    table=t
+  }, pipe_mt)
+end
+
+-- [[ ITERATORS ]]
+
+fnl.ipairs = function(t)
+  return create_pipe(ipairs, t)
+end
+
+-- [[ MAIN PIPE METHODS ]]
+
+pipe_methods.filter = function(pipe, predicate)
+  local result = {}
+  for k, v in pipe.iterator() do
+    if predicate(k, v) then
+      table.insert(result, v)
+    end
+  end
+  return create_pipe(pipe.iterator, result)
+end
+
+
+
+-- *** [[ OLD ]] ***
+
+
 
 -- [[ STANDARD PIPED FUNCTIONS ]]
 
