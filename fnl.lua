@@ -5,6 +5,18 @@ local syntax = require "syntax"
 local tk = require "tk"
 
 
+---- [[ BASE CLASS ]]
+--
+--local create_pipe = function()
+--
+--end
+--
+---- [[ ITERATORS ]]
+--
+--fnl.ipairs = function(pipe)
+--  return create_pipe()
+--end
+
 -- [[ STANDARD PIPED FUNCTIONS ]]
 
 --- Filters the table by ipairs & predicate
@@ -223,7 +235,10 @@ end
 fnl.cache.global_cache = {}
 
 --- Generates clojure f() = x
-fnl.static = function(x) return function() return x end end
+fnl.static = function(...)
+  local arg = arg or {...}
+  return function() return table.unpack(arg) end
+end
 
 
 return fnl
