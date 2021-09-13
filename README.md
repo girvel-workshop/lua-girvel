@@ -10,8 +10,9 @@ local fnl = require 'fnl'
 local seq = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29}
   / fnl.filter(function(i, x) return x >= 5 end)
   / fnl.map(function(i, x) return x ^ 2 - 1 end)
-  / fnl.all(function(i, x) return x % 24 == 0 end)
--- seq == true
+
+local theorem_works = seq / fnl.all(function(i, x) return x % 24 == 0 end)
+-- theorem_works == true
 
 local fib = fnl.cache() .. function(n)
   return n == 1 or n == 2 and 1 or fib(n - 1) + fib(n - 2)
