@@ -50,19 +50,30 @@ vector_methods.rotated = function(self, angle)
   )
 end
 
--- [[ VECTOR OPERATORS ]]
+-- [[ VECTOR OPERATORS -- ESSENTIAL ]]
 
+--- Adds two vectors
 vector_mt.__add = function(v, u)
+  assert(#v == #u, "added vectors should have the same size")
   return vector(table.unpack(
     v / fnl.map(function(i, x) return x + u[i] end)
   ))
 end
 
+--- Multiplies vector by a number
 vector_mt.__mul = function(v, k)
   return vector(table.unpack(
     v / fnl.map(function(i, x) return x * k end)
   ))
 end
+
+-- [[ VECTOR OPERATORS -- SHORTCUTS ]]
+
+--- Negates vector
+vector_mt.__unm = function(v) return v * -1 end
+
+--- Substracts one vector by another
+vector_mt.__sub = function(v, u) return v +- u end
 
 return vector
 
