@@ -1,20 +1,18 @@
---- Library structure to work with N-dimensional vectors
+--- Library structure to work with vectors; 2D vectors are preferred.
 local vector = {}
 local module_mt = {}
 setmetatable(vector, module_mt)
+local module_constants = {}
 
 local vector_methods = {}
 local vector_mt = {
-  --- Allows to get v[1], v[2], ... as v.x, v.y, ...
-  __index=function(self, index)
-    return rawget(self, self.dimensions[index]) or vector_methods[index]
-  end
+
 }
 
 local fnl = require 'fnl'
 require('env').fix()
 
--- [[ VECTOR CREATION ]]
+-- [[ MODULE OPERATORS ]]
 
 --- Creates vector w/ varargs
 module_mt.__call = function(self, ...)
@@ -28,6 +26,9 @@ module_mt.__call = function(self, ...)
     ...
   }, vector_mt)
 end
+
+--- Returns constants
+module_mt.__index = module_constants
 
 -- [[ VECTOR METHODS ]]
 
@@ -52,6 +53,11 @@ end
 
 -- [[ VECTOR OPERATORS -- ESSENTIAL ]]
 
+--- Allows to get v[1], v[2], ... as v.x, v.y, ...
+vector_mt.__index=function(self, index)
+  return rawget(self, self.dimensions[index]) or vector_methods[index]
+end
+
 --- Adds two vectors
 vector_mt.__add = function(v, u)
   assert(#v == #u, "added vectors should have the same size")
@@ -75,52 +81,21 @@ vector_mt.__unm = function(v) return v * -1 end
 --- Substracts one vector by another
 vector_mt.__sub = function(v, u) return v +- u end
 
-return vector
+-- [[ MODULE CONSTANTS ]]
 
--- [[ OBSOLETE CODE ]]
+fnl.extend_mut(module_constants, {
+  zero=vector(0, 0),
+  right=vector(1, 0),
+  left=vector(-1, 0),
+  up=vector(0, -1),
+  down=vector(0, 1),
+  one=vector(1, 1)
+})
 
---[[
+-- [[ MAKE CONSTANTS IMMUTABLE ]]
 
-function vector.__unm(v)
-  return v * -1
-end
-
-function vector.__add(v, u)
-  return vector:new(v.x + u.x, v.y + u.y)
-end
-
-function vector.__sub(v, u)
-  return v + -u
-end
-
-function vector.__mul(v, k)
-  return vector:new(v.x * k, v.y * k)
-end
-
-function vector.__div(v, k)
-  return v * (1 / k)
-end
-
-function vector.zero()
-  return vector:new(0, 0)
-end
-
-function vector.right()
-  return vector:new(1, 0)
-end
-
-function vector.left()
-  return vector:new(-1, 0)
-end
-
-function vector.up()
-  return vector:new(0, -1)
-end
-
-function vector.one()
-  return vector:new(1, 1)
+module_mt.__newindex = function()
+  error "You should not change this module outside of it"
 end
 
 return vector
-
-]]
