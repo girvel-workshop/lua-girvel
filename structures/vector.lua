@@ -12,7 +12,9 @@ local vector_mt = {
 }
 
 local fnl = require 'fnl'
+require('env').fix()
 
+-- [[ VECTOR CREATION ]]
 
 --- Creates vector w/ varargs
 module_mt.__call = function(self, ...)
@@ -26,6 +28,8 @@ module_mt.__call = function(self, ...)
     ...
   }, vector_mt)
 end
+
+-- [[ VECTOR METHODS ]]
 
 --- Calculates vector's squared magnitude (for optimization purposes)
 vector_methods.squared_magnitude = function(self)
@@ -44,6 +48,20 @@ vector_methods.rotated = function(self, angle)
     math.cos(angle) * self.x - math.sin(angle) * self.y,
     math.sin(angle) * self.x + math.cos(angle) * self.y
   )
+end
+
+-- [[ VECTOR OPERATORS ]]
+
+vector_mt.__add = function(v, u)
+  return vector(table.unpack(
+    v / fnl.map(function(i, x) return x + u[i] end)
+  ))
+end
+
+vector_mt.__mul = function(v, k)
+  return vector(table.unpack(
+    v / fnl.map(function(i, x) return x * k end)
+  ))
 end
 
 return vector

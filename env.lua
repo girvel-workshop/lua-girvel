@@ -1,6 +1,15 @@
 --- Library containing functions to work with lua environments
 local env = {}
 
+--- Removes compatibility issues
+env.fix = function()
+  table.unpack = unpack or table.unpack
+  unpack = table.unpack
+end
+
+env.fix()
+
+-- TODO make it work at lua5.2+
 --- Pushes upper local variables into the current scope
 env.push = function(delta)
   local env_ = getfenv(2)
@@ -47,12 +56,6 @@ env.append = function(env_, f, ...)
   end
 
   return result
-end
-
---- Removes compatibility issues
-env.fix = function()
-  table.unpack = unpack or table.unpack
-  unpack = table.unpack
 end
 
 --- Isolates environment to the given one
