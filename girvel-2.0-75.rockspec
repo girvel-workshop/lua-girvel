@@ -1,5 +1,5 @@
 package = "girvel"
-version = "2.0-74"
+version = "2.0-75"
 source = {
    url = "git://github.com/girvel-workshop/lua-girvel"
 }
@@ -9,7 +9,9 @@ description = {
    license = "MIT"
 }
 dependencies = {
-   "lua >= 5.1, < 5.4"
+   "lua >= 5.1, < 5.4",
+   "strong >= 1.0.4-1",
+   "luafilesystem >= 1.8.0-1"
 }
 build = {
    type = "builtin",
