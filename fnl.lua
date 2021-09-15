@@ -225,5 +225,21 @@ fnl.cache.global_cache = {}
 --- Generates clojure f() = x
 fnl.static = function(x) return function() return x end end
 
+-- [[ FUTURE FEATURES ]]
+
+fnl.future = {}
+
+fnl.future.range_generator = function(a, b, c)
+  return setmetatable({}, {
+    __index=function(_, index)
+      if index < 1 or index > math.floor((b - a) / c) + 1 then
+        return
+      end
+
+      return a + (index - 1) * c
+    end
+  })
+end
+
 
 return fnl

@@ -1,5 +1,5 @@
 package = "girvel"
-version = "2.0-84"
+version = "2.0-86"
 source = {
    url = "git://github.com/girvel-workshop/lua-girvel"
 }
