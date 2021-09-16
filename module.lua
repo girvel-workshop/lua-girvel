@@ -1,7 +1,5 @@
 --- Library for quick importing libraries and assets
-local module = {}
-local module_mt = {}
-setmetatable(module, module_mt)
+local module, module_mt = require("tk").setmetatable({}, {})
 
 -- TODO dependencies
 local lfs = require "lfs"

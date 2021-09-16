@@ -10,7 +10,7 @@ function string:to_posix()
 end
 
 --- Sets metatable and returns both an object & the metatable
-function setmetatable(object, mt)
+function tk.setmetatable(object, mt)
   setmetatable(object, mt)
   return object, mt
 end
