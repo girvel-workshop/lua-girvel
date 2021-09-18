@@ -1,19 +1,26 @@
 --- Functional-style library
 local fnl = {}
+local mt = {}
+setmetatable(fnl, mt)
+local fnl_methods = {}
 
 local syntax = require "syntax"
 local tk = require "tk"
 
 
+--- Adds fnl methods to the table's metatable
+mt.__call = function(_, t)
+  return setmetatable(t, {__index=fnl_methods})
+end
+
 -- [[ STANDARD PIPED FUNCTIONS ]]
 
---- Filters the table by ipairs & predicate
-fnl.filter = syntax.pipe() .. syntax.implicit_lambda(2, "ix, it") ..
-function(t, predicate)
+--- Filters the table by pairs & predicate
+fnl_methods.filter = function(self, predicate)
   local result = {}
-  for i, v in ipairs(t) do
-    if predicate(i, v) then
-      table.insert(result, v)
+  for k, v in pairs(self) do
+    if predicate(k, v) then
+      result[k] = v
     end
   end
   return result
@@ -227,19 +234,33 @@ fnl.static = function(x) return function() return x end end
 
 -- [[ FUTURE FEATURES ]]
 
-fnl.future = {}
-
-fnl.future.range_generator = function(a, b, c)
-  return setmetatable({}, {
-    __index=function(_, index)
-      if index < 1 or index > math.floor((b - a) / c) + 1 then
-        return
-      end
-
-      return a + (index - 1) * c
-    end
-  })
-end
-
+--fnl.future, fnl.future_mt = tk.setmetatable({}, {})
+--local fnl_methods = {}
+--
+--fnl.future.range_generator = function(a, b, c)
+--  return setmetatable({}, {
+--    __index=function(_, index)
+--      if index < 1 or index > math.floor((b - a) / c) + 1 then
+--        return
+--      end
+--
+--      return a + (index - 1) * c
+--    end
+--  })
+--end
+--
+--fnl.future_mt.__call = function(_, t)
+--  return setmetatable(t, {__index= fnl_methods})
+--end
+--
+--fnl_methods.filter = function(self, predicate)
+--  local result = {}
+--  for k, v in pairs(self) do
+--    if predicate(k, v) then
+--      result[k] = v
+--    end
+--  end
+--  return result
+--end
 
 return fnl
