@@ -1,7 +1,5 @@
 --- Library structure to work with values locked in the predefined range
-local limited = {}
-local module_mt = {}
-setmetatable(limited, module_mt)
+local limited, module_mt = require("tk").setmetatable({}, {})
 
 local limited_mt = {__index={}}
 

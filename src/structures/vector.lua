@@ -1,8 +1,6 @@
 --- Library structure to work with vectors; 2D vectors are preferred.
-local vector = {}
-local module_mt = {}
-setmetatable(vector, module_mt)
-local module_constants = {}
+local vector, module_mt = require("tk").setmetatable({}, {})
+local vector_constants = {}
 
 local vector_methods = {}
 local vector_mt = {
@@ -28,7 +26,7 @@ module_mt.__call = function(self, ...)
 end
 
 --- Returns constants
-module_mt.__index = module_constants
+module_mt.__index = vector_constants
 
 -- [[ VECTOR METHODS ]]
 
@@ -83,7 +81,7 @@ vector_mt.__sub = function(v, u) return v +- u end
 
 -- [[ MODULE CONSTANTS ]]
 
-fnl.extend_mut(module_constants, {
+fnl.extend_mut(vector_constants, {
   zero=vector(0, 0),
   right=vector(1, 0),
   left=vector(-1, 0),
