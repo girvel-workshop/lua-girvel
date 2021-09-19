@@ -34,7 +34,7 @@ module_mt.__index = module_constants
 
 --- Calculates vector's squared magnitude (for optimization purposes)
 vector_methods.squared_magnitude = function(self)
-  return self / fnl.map(function(ix, it) return it^2 end) / fnl.fold "+"
+  return self / fnl.map(function(k, v) return v^2 end) / fnl.fold "+"
 end
 
 --- Calculates vector's magnitude

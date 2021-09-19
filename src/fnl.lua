@@ -8,11 +8,11 @@ local tk = require "tk"
 -- [[ STANDARD PIPED FUNCTIONS ]]
 
 --- Filters the table by ipairs & predicate
-fnl.filter = syntax.pipe() .. syntax.implicit_lambda(2, "ix, it") ..
+fnl.filter = syntax.pipe() .. syntax.implicit_lambda(2, "k, v") ..
 function(t, predicate)
   local result = {}
-  for i, v in ipairs(t) do
-    if predicate(i, v) then
+  for k, v in ipairs(t) do
+    if predicate(k, v) then
       table.insert(result, v)
     end
   end
@@ -20,11 +20,11 @@ function(t, predicate)
 end
 
 --- Maps the table by ipairs & function
-fnl.map = syntax.pipe() .. syntax.implicit_lambda(2, "ix, it") ..
+fnl.map = syntax.pipe() .. syntax.implicit_lambda(2, "k, v") ..
 function(t, f)
   local result = {}
-  for ix, it in ipairs(t) do
-    table.insert(result, f(ix, it))
+  for k, v in ipairs(t) do
+    table.insert(result, f(k, v))
   end
   return result
 end

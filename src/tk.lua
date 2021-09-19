@@ -10,9 +10,8 @@ function string:to_posix()
 end
 
 --- Sets metatable and returns both an object & the metatable
-function setmetatable(object, mt)
-  setmetatable(object, mt)
-  return object, mt
+function tk.setmetatable(object, mt)
+  return setmetatable(object, mt), mt
 end
 
 --- Creates a tree: the table, who creates subtables when __index

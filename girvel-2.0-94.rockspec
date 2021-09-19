@@ -1,5 +1,5 @@
 package = "girvel"
-version = "2.0-88"
+version = "2.0-94"
 source = {
    url = "git://github.com/girvel-workshop/lua-girvel"
 }
@@ -16,12 +16,12 @@ dependencies = {
 build = {
    type = "builtin",
    modules = {
-      env = "env.lua",
-      fnl = "fnl.lua",
-      module = "module.lua",
-      ["structures.limited"] = "structures/limited.lua",
-      ["structures.vector"] = "structures/vector.lua",
-      syntax = "syntax.lua",
-      tk = "tk.lua"
+      env = "src/env.lua",
+      fnl = "src/fnl.lua",
+      module = "src/module.lua",
+      ["structures.limited"] = "src/structures/limited.lua",
+      ["structures.vector"] = "src/structures/vector.lua",
+      syntax = "src/syntax.lua",
+      tk = "src/tk.lua"
    }
 }
