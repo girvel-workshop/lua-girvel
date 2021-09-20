@@ -32,10 +32,10 @@ function module_mt:__call(path)
       local represent = module.get_represent_for_path(self.path)
       if not io.open(self.path:to_posix() .. "." .. represent.extension)
         and not io.open(self.path:to_posix()) then
-        error("Module %s does not exist" % self.path)
+        return
       end
 
-      if is_file(self.path:to_posix() .. "." .. represent.extension) then
+      if io.open(self.path:to_posix() .. "." .. represent.extension) then
         return module.require(self.path)
       end
 
