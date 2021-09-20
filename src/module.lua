@@ -1,7 +1,8 @@
 --- Library for quick importing libraries and assets
-local module, module_mt = require("tk").setmetatable({}, {})
+local module = {}
+local mt = {}
+setmetatable(module, mt)
 
--- TODO dependencies
 local lfs = require "lfs"
 local fnl = require "fnl"
 require "strong"
@@ -23,7 +24,7 @@ module.default_represent = {
 }
 
 --- Creates wrapper for importing modules with the given root path
-function module_mt:__call(path)
+function mt:__call(path)
   return setmetatable({path = path}, {
     __index = function(self, item)
       return module(self.path .. "." .. item)
