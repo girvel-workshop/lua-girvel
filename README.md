@@ -44,21 +44,8 @@ cd lua-girvel
 sudo luarocks build
 ```
 
-## Documentation
+## References
 
-(In progress)
-
-## Future features
-
-### Match expression
-
-```lua
-local match = require "match"
-local fnl = require "fnl"
-
-local predicate = {pcall(lambda, arg)} / match {
-  [{true, match.arg(1)}] = fnl.one,
-  [{false, match.where{type="syntax_error"}}] = function() return fnl.zero end,
-  [{false, match.arg(1)}] = error,
-}
-```
+- Guideline -- see docs/guideline.md
+- Future features -- see docs/future.md
+- Code style & structural principles -- see docs/style.md

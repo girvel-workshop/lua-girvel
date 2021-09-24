@@ -70,4 +70,6 @@ function(_, f, argument_index, args_definition)
   end
 end
 
+-- syntax.context = synta
+
 return syntax
