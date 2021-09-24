@@ -6,7 +6,7 @@ environment.fix()
 require "strong"
 
 local decorator_factory = function(f)
-  return setmetatable({function_=f},{  -- decorator
+  return setmetatable({function_=f}, {  -- decorator
     __call = function(decorator, ...)
       return setmetatable({decorator=decorator, args={...}}, {  -- called decorator
         __concat = function(called_decorator, value)
@@ -70,6 +70,12 @@ function(_, f, argument_index, args_definition)
   end
 end
 
--- syntax.context = synta
+syntax.context = syntax.decorator() .. function(_, mt)
+	return setmetatable({mt=mt}, {
+		__div=function(self, value)
+			return setmetatable(value, self.mt)
+		end
+	})
+end
 
 return syntax
