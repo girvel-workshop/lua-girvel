@@ -12,7 +12,7 @@ You can describe multiple changes in one commit by separating them by ';'
 
 ### Types
 
-- feature
+- feat
 - fix
 - refactor
 - style
